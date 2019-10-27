@@ -6,7 +6,7 @@
 # Author: neikei (https://github.com/neikei/validateHyperlinksInGithubRepo)
 
 url=$1
-projectname=$(echo $url | grep -oE '[^/]+$')
+projectname=$(echo "$url" | grep -oE '[^/]+$')
 projectfolder="$projectname-master"
 logfile=$(date "+%Y%m%d_%H%M%S")"_$projectname.log"
 
@@ -27,15 +27,15 @@ function validateParameter () {
 }
 
 function validateUrl () {
-    if [[ $(echo $url | grep -oe "http[s]://github\.com\/[-A-Za-z0-9+&@#/%?=~_|!:,.;]*" | wc -l) != "1" ]]; then
+    if [[ $(echo "$url" | grep -coe "http[s]://github\.com\/[-A-Za-z0-9+&@#/%\?\=\~\_\|\!\:\,\.\;]*") != "1" ]]; then
         log "$url is not a Github repository"
         exit
     fi
-    if [[ $(echo $url | grep -oe "http[s]://[-A-Za-z0-9+&@#/%?=~_|!:,.;]*" | wc -l) != "1" ]]; then
+    if [[ $(echo "$url" | grep -coe "http[s]://[-A-Za-z0-9+&@#/%\?\=\~\_\|\!\:\,\.\;]*") != "1" ]]; then
         log "$url is no valid URL"
         exit
     fi
-    if [[ $(curl -s -o /dev/null -w "%{http_code}" $url) -ge 400 ]]; then
+    if [[ $(curl -I -s -o /dev/null -w "%{http_code}" "$url") -ge 400 ]]; then
         log "$url is not reachable"
         exit
     fi
@@ -43,16 +43,16 @@ function validateUrl () {
 }
 
 function getRepo () {
-    wget $url/archive/master.zip &>/dev/null
+    wget "$url"/archive/master.zip &>/dev/null
     unzip master.zip &>/dev/null
     rm master.zip
     log "$url successfully downloaded"
 }
 
 function testLinks () {
-    for hyperlink in $(find $projectfolder -type f -exec grep -oe "http[s]://[-A-Za-z0-9+&@#/%?=~_|!:,.;]*" {} \;)
+    for hyperlink in $(find "$projectfolder" -type f -exec grep -oe "http[s]://[-A-Za-z0-9+&@#/%\?\=\~\_\|\!\:\,\.\;]*" {} \;)
     do
-        responsecode=$(curl -I -k -s -o /dev/null -w "%{http_code}" --connect-timeout 3 --max-time 10 $hyperlink)
+        responsecode=$(curl -I -k -s -o /dev/null -w "%{http_code}" --connect-timeout 3 --max-time 10 "$hyperlink")
         if [[ $responsecode == "200" || $responsecode == "302" || $responsecode == "301" ]]; then
             status="OK    "
         else
@@ -63,7 +63,7 @@ function testLinks () {
 }
 
 function cleanup () {
-    rm -r $projectfolder
+    rm -r "$projectfolder"
     log "$projectfolder successfully cleaned up"
 }
 

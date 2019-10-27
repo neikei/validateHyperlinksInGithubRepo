@@ -8,7 +8,7 @@ Validation of hyperlinks in Github repositories.
 bash validateHyperlinksInGithubRepo.sh "<your_Github_repository>"
 ```
 
-# Example
+## Example
 
 The following example shows the validation of this Github repository.
 
@@ -31,6 +31,6 @@ The following example shows the validation of this Github repository.
 2019-10-27 14:59:15 >> --------------------------------------------------------------------------------
 ```
 
-# Feedback, Issues and Pull-Requests
+## Feedback, Issues and Pull-Requests
 
 Feel free to report issues, fork this project and submit pull requests.
