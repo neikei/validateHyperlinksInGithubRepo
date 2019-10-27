@@ -2,7 +2,8 @@
 
 # Script: validateHyperlinksInGithubRepo.sh
 # Description: Validation of hyperlinks in Github repositories
-# Author: neikei (https://github.com/neikei)
+# License: MIT License
+# Author: neikei (https://github.com/neikei/validateHyperlinksInGithubRepo)
 
 url=$1
 projectname=$(echo $url | grep -oE '[^/]+$')
@@ -15,7 +16,7 @@ function log () {
 
 function usage () {
     echo 'FAILED: Missing parameter'
-    echo '    Usage: validateHyperlinksInGithubRepo.sh "https://github.com/neikei/syntaxchecks"'
+    echo '    Usage: bash validateHyperlinksInGithubRepo.sh "https://github.com/neikei/validateHyperlinksInGithubRepo"'
     exit
 }
 
@@ -63,6 +64,7 @@ function testLinks () {
 
 function cleanup () {
     rm -r $projectfolder
+    log "$projectfolder successfully cleaned up"
 }
 
 validateParameter
